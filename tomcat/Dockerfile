@@ -1,6 +1,6 @@
 # tomcat
 #
-FROM softcrack/ubuntu
+FROM softcrack/ssh
 MAINTAINER Samuel Shan, shm.shan@gmail.com
 
 RUN sudo apt-get install -y tomcat7
