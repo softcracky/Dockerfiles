@@ -1,0 +1,9 @@
+#!/bin/bash
+
+lsnrctl start
+sqlplus / as sysdba << EOF
+startup;
+EOF
+
+cd
+exec /bin/bash -l
