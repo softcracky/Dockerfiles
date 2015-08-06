@@ -1,8 +1,10 @@
 # mysql server
 #
-FROM softcrack/ssh
+FROM softcrack/ubuntu
 MAINTAINER Samuel Shan, shm.shan@gmail.com
-
-RUN sudo apt-get install -y mysql-server && sudo sed -i '/^bind-address/{s/^/#/}' /etc/mysql/my.cnf
 EXPOSE 3306
-ENTRYPOINT sudo service mysql start && bash -l
+
+RUN sudo apt-get update && sudo apt-get install -y mysql-server
+RUN sudo adduser mysql admin
+USER mysql
+ENTRYPOINT exec dockerInit --init-dir /var/lib/mysql /usr/sbin/mysqld --bind-address=0.0.0.0 --datadir=/data/mysql
