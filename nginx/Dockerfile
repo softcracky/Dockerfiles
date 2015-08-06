@@ -1,8 +1,8 @@
 # nginx
 #
-FROM softcrack/ssh
+FROM softcrack/ubuntu
 MAINTAINER Samuel Shan, shm.shan@gmail.com
 
-RUN sudo apt-get install -y nginx
+RUN sudo apt-get update && sudo apt-get install -y nginx
 EXPOSE 80
-ENTRYPOINT sudo service nginx start && bash -l
+ENTRYPOINT exec dockerInit --init-dir /etc/nginx/sites-enabled --wait sudo /usr/sbin/nginx
