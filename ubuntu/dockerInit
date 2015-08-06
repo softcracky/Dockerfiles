@@ -1,0 +1,29 @@
+#!/bin/bash
+
+while true; do case "$1" in
+	--cwd)
+		cd $2
+		shift 2 ;;
+	--init-dir)
+		src=$2
+		target=/data/`basename $2`
+		[ ! -d /data ] && echo "Error: volume /data not exists!" && exit -1
+		[ ! -e $src ] && echo "Error: directory or file '$src' not exists!" && exit -1
+		[ ! -e $target ] && sudo mv $src /data
+		[ ! -L $src ] && { sudo rm -fr $src; sudo ln -s $target $src; }
+		shift 2 ;;
+	--wait)
+		waitProcess=true
+		shift ;;
+	-*)
+		echo "Invalid arguemnt '$1'" && exit -1 ;;
+	*)
+		break
+esac; done
+
+if [ $waitProcess ]; then
+	$*
+	exec bash -l
+else
+	exec $*
+fi
