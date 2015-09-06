@@ -2,7 +2,7 @@
 
 usage(){
 cat << EOF
-usage: $0 <cmd> <vm-name> [args] ...
+usage: $0 <cmd> <container-name> [args] ...
 where
 	cmd:	one of 'build', 'create', 'recreate', 'shell'
 	args:	arguments passed to docker command
@@ -17,13 +17,17 @@ case $cmd in
 	build)
 		docker build --rm -t softcrack/$name `dirname $0`/$name/ ;;
 	create)
-		docker create --name $name -it --hostname $name --volume /data/$name:/data $*
+		[ -z "$*" ] && echo "image not specified" && exit -1
+		[ -d /data/$name ] || mkdir /data/$name
+		docker create --name $name -it --hostname $name --volume /data/$name:/data $* && \
 		docker restart $name
 		;;
 	recreate)
+		image=`docker ps -a | awk "/$name\s*\$/{print \\\$2}"`
+		[ -z "$image" ] && echo container not found && exit -1
 		docker stop $name
 		docker rm $name
-		docker create --name $name -it --hostname $name --volume /data/$name:/data $* softcrack/$name
+		docker create --name $name -it --hostname $name --volume /data/$name:/data $image $* && \
 		docker restart $name
 		;;
 	shell)
