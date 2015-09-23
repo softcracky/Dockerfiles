@@ -7,7 +7,7 @@ MAINTAINER Samuel Shan, shm.shan@gmail.com
 RUN sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\/ /mirror:\/\/mirrors.ubuntu.com\/mirrors.txt /' /etc/apt/sources.list \
 	&& apt-get update \
 	&& apt-get -y upgrade \
-	&& sudo apt-get install -y man
+	&& apt-get install -y man
 
 #add user 'user'
 RUN adduser --disabled-password --gecos "" user && addgroup admin && adduser user admin && sed -i '/^%admin/s/ALL$/NOPASSWD:\0/' /etc/sudoers
